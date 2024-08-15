@@ -1,0 +1,291 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    List of tasks
+{% endblock %}
+
+{% block main %}
+    <form action="/" method="get">
+
+    <h3> Tasks table</h3>
+    <br>
+
+    <table  class="table table-bordered table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>Task ID</th>
+                <th>Task Name</th>
+                <th>Date Created</th>
+                <th>Deadline</th>
+                <th>Estimated Completition Time</th>
+                <th>Progress</th>
+                <th>Finished</th>
+                <th>Department</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.name }}</td>
+                <td>{{ task.time }}</td>
+                <td>{{ task.deadline }}</td>
+                <td>{{ task.estimated_time }} Working days</td>
+                <td>
+                    {% if task.progress == 0 %}
+                        Not started
+                    {% elif task.progress == 1 %}
+                        In progress
+                    {% elif task.progress == 2 %}
+                        Completed
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.completed == 0 %}
+                        Yes
+                    {% elif task.completed == 1 %}
+                        No
+                    {% endif %}
+                </td>
+                <td>{{ task.department }}</td>
+                <td>
+                    {% if task.priority == 0 %}
+                        Low
+                    {% elif task.priority == 1 %}
+                        Medium
+                    {% elif task.priority == 2 %}
+                        High
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <br>
+
+    <div class="form-row">
+        <h4> Filter Tasks</h4>
+            <div class="form-group col-md-2">
+                <label for="task_id">Task ID</label>
+                <input type="text" id="task_id" name="task_id" class="form-control" placeholder="Task ID">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="task_name">Task Name</label>
+                <input type="text" id="task_name" name="task_name" class="form-control" placeholder="Task Name">
+            </div>
+            <!-- <div class="form-group col-md-2">
+                <label for="date_created">Date Created</label>
+                <input type="date" id="date_created" name="date_created" class="form-control"> -->
+            </div>
+            <div class="form-group col-md-2">
+                <label for="deadline">Deadline</label>
+                <input type="date" id="deadline" name="deadline" class="form-control">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="estimated_time">Estimated Time (days)</label>
+                <input type="number" id="estimated_time" name="estimated_time" class="form-control" placeholder="Estimated Time">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="progress">Progress</label>
+                <select id="progress" name="progress" class="form-control">
+                    <option value="">All</option>
+                    <option value="0">Not started</option>
+                    <option value="1">In progress</option>
+                    <option value="2">Completed</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="completed">Finished</label>
+                <select id="completed" name="completed" class="form-control">
+                    <option value="">All</option>
+                    <option value="0">Yes</option>
+                    <option value="1">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="department">Department</label>
+                <select id="department" name="department" class="form-control">
+                    <option value="">All</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="sales">Sales</option>
+                    <option value="accounting">Accounting</option>
+                    <option value="HR">HR</option>
+                    <option value="production">Production</option>
+                    <option value="R&D">R&D</option>
+                    <option value="customer service">Customer Service</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority" class="form-control">
+                    <option value="">All</option>
+                    <option value="0">Low</option>
+                    <option value="1">Medium</option>
+                    <option value="2">High</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+
+    <br>
+    <h4> Progress Chart</h4>
+
+    <canvas id="progressChart" width="400" height="100"></canvas>
+
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get tasks data
+        const tasks = {{ tasks | tojson }};
+
+        // Prepare data for the chart
+        const notStartedTasks = tasks.filter(task => task.progress == 0).map(task => task.name);
+        const inProgressTasks = tasks.filter(task => task.progress == 1).map(task => task.name);
+        const completedTasks = tasks.filter(task => task.progress == 2).map(task => task.name);
+
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Not Started', 'In Progress', 'Completed'],
+                datasets: [
+                    {
+                        label: 'Not Started',
+                        data: [notStartedTasks.length, 0],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'In Progress',
+                        data: [0, inProgressTasks.length, 0],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Completed',
+                        data: [0, 0, completedTasks.length],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                let label = tooltipItem.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (tooltipItem.datasetIndex === 0) {
+                                    label += notStartedTasks.join(', ');
+                                } else if (tooltipItem.datasetIndex === 1) {
+                                    label += inProgressTasks.join(', ');
+                                } else if (tooltipItem.datasetIndex === 2) {
+                                    label += completedTasks.join(', ');
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+    </script>
+
+    <br>
+    <br>
+    <h4> Priority Chart</h4>
+
+    <canvas id="priorityChart" width="400" height="100"></canvas>
+
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get tasks data
+        const tasks = {{ tasks | tojson }};
+
+        // Prepare data for the chart
+        const lowTasks = tasks.filter(task => task.priority == 0).map(task => task.name);
+        const mediumTasks = tasks.filter(task => task.priority == 1).map(task => task.name);
+        const highTasks = tasks.filter(task => task.priority == 2).map(task => task.name);
+
+        const ctx = document.getElementById('priorityChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Low Priority', 'Medium Priority', 'High Priority'],
+                datasets: [
+                    {
+                        label: 'Low Priority',
+                        data: [lowTasks.length, 0],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Medium Priority',
+                        data: [0, mediumTasks.length, 0],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'High Priority',
+                        data: [0, 0, highTasks.length],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                let label = tooltipItem.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (tooltipItem.datasetIndex === 0) {
+                                    label += lowTasks.join(', ');
+                                } else if (tooltipItem.datasetIndex === 1) {
+                                    label += mediumTasks.join(', ');
+                                } else if (tooltipItem.datasetIndex === 2) {
+                                    label += highTasks.join(', ');
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+    </script>
+
+{% endblock %}
