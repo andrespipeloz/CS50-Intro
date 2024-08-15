@@ -1,0 +1,38 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+    Progress
+{% endblock %}
+
+{% block main %}
+<form action="/progress" method="post">
+    <h4> Change the progress stage of your tasks!</h4>
+    <br>
+    <table  class="table table-bordered table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>Task ID</th>
+                <th>Task Name</th>
+                <th>Progress</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                    <td>{{ task.id }}</td>
+                    <td>{{ task.name }}</td>
+                    <td>
+                        <select name="{{ task.id }}">
+                            <option value="0" {% if task.progress == 0 %} selected {% endif %}>Not started</option>
+                            <option value="1" {% if task.progress == 1 %} selected {% endif %}>In progress</option>
+                            <option value="2" {% if task.progress == 2 %} selected {% endif %}>Completed</option>
+                        </select>
+                    </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Save Progress</button>
+</form>
+{% endblock %}
