@@ -1,0 +1,43 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+    Department
+{% endblock %}
+
+{% block main %}
+<form action="/department" method="post">
+    <table  class="table table-bordered table-striped">
+        <h4> Change the department responsable for your tasks!</h4>
+        <br>
+        <thead class="thead-light">
+            <tr>
+                <th>Task ID</th>
+                <th>Task Name</th>
+                <th>Department</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                    <td>{{ task.id }}</td>
+                    <td>{{ task.name }}</td>
+                    <td>
+                        <select name="{{ task.id }}">
+                            <option value="marketing" {% if task.department == "marketing" %} selected {% endif %}>marketing</option>
+                            <option value="sales" {% if task.department == "sales" %} selected {% endif %}>sales</option>
+                            <option value="accounting" {% if task.department == "accounting" %} selected {% endif %}>accounting</option>
+                            <option value="HR" {% if task.department == "HR" %} selected {% endif %}>HR</option>
+                            <option value="production" {% if task.department == "production" %} selected {% endif %}>production</option>
+                            <option value="service" {% if task.department == "service" %} selected {% endif %}>service</option>
+                            <option value="development" {% if task.department == "development" %} selected {% endif %}>development</option>
+
+                        </select>
+                    </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Save changes</button>
+</form>
+{% endblock %}
