@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add a task
+{% endblock %}
+
+{% block main %}
+    <form action="/add" method="post">
+        <h4> Add a new Task!</h4>
+        <br>
+        <div class="mb-3">
+            <label for="status"> <b>Name of the task:</b></label>
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="task_name" placeholder="Name of task" type="text">
+        </div>
+        <div class="mb-3">
+            <label for="status"> <b>Deadline:</b></label>
+            <input class="form-control mx-auto w-auto" name="deadline" placeholder="Deadline" type="date">
+        </div>
+        <div class="mb-3">
+            <label for="status"> <b>Estimated time:</b></label>
+            <input class="form-control mx-auto w-auto" name="estimated" placeholder="Estimated Time (days)" type="number">
+        </div>
+        <div class="form-group">
+            <label for="status"> <b>Progress:</b></label>
+            <select class="form-control" id="progress" name="progress">
+                <option value="">Select the progress of the project</option>
+                    <option value="0"> Not started </option>
+                    <option value="1"> In process </option>
+                    <option value="2"> Completed </option>
+            </select>
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="status"> <b>Priority:</b></label>
+            <select class="form-control" id="priority" name="priority">
+                <option value="">Select the priority of the project</option>
+                    <option value="0"> Low </option>
+                    <option value="1"> Medium </option>
+                    <option value="2"> High </option>
+            </select>
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="status"> <b>Department:</b></label>
+            <select class="form-control" id="department" name="department">
+                <option value="">Select the department of the project</option>
+                    <option value="marketing"> Marketing </option>
+                    <option value="sales"> Sales </option>
+                    <option value="accounting"> Accounting </option>
+                    <option value="HR"> HR </option>
+                    <option value="production"> Production </option>
+                    <option value="development"> Development </option>
+                    <option value="service"> Customer Service </option>
+
+            </select>
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="status"> <b>Completed?</b></label>
+            <select class="form-control" id="completed" name="completed">
+                <option value="">Already done?</option>
+                    <option value="0"> Yes </option>
+                    <option value="1"> No </option>
+            </select>
+            <br>
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="Support" placeholder="Support person id?" type="number">
+        </div>
+        <button class="btn btn-primary" type="submit">Add Task</button>
+    </form>
+{% endblock %}
