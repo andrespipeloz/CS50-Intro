@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Completed
+{% endblock %}
+
+{% block main %}
+<form action="/priority" method="post">
+    <h4> Change the priority of your tasks!</h4>
+    <br>
+    <table  class="table table-bordered table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>Task ID</th>
+                <th>Task Name</th>
+                <th>priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                    <td>{{ task.id }}</td>
+                    <td>{{ task.name }}</td>
+                    <td>
+                        <select name="{{ task.id }}">
+                            <option value="0" {% if task.priority == 0 %} selected {% endif %}>Low</option>
+                            <option value="1" {% if task.priority == 1 %} selected {% endif %}>Medium</option>
+                            <option value="2" {% if task.priority == 2 %} selected {% endif %}>High</option>
+                        </select>
+                    </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Save</button>
+</form>
+{% endblock %}
