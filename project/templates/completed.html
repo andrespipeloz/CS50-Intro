@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Completed
+{% endblock %}
+
+{% block main %}
+<form action="/completed" method="post">
+    <h4> Mark your tasks as completed!</h4>
+    <br>
+    <table  class="table table-bordered table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>Task ID</th>
+                <th>Task Name</th>
+                <th>Finished?</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                    <td>{{ task.id }}</td>
+                    <td>{{ task.name }}</td>
+                    <td>
+                        <select name="{{ task.id }}">
+                            <option value="0" {% if task.completed == 0 %} selected {% endif %}>Yes</option>
+                            <option value="1" {% if task.completed == 1 %} selected {% endif %}>No</option>
+                        </select>
+                    </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit">Save</button>
+</form>
+{% endblock %}
