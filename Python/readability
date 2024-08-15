@@ -1,0 +1,63 @@
+from cs50 import get_string
+
+
+def main():
+
+    text = get_string("Text: ")
+
+    # Number of letters
+    letters = count_letters(text)
+
+    # Number of words
+    words = count_words(text)
+
+    # Number of sentences
+    sentences = count_sentences(text)
+
+    # Coleman-Liau index
+    l = (float(letters) / float(words)) * 100
+    print(l)
+    s = (float(sentences) / float(words)) * 100
+    print(s)
+    index = 0.0588 * l - 0.296 * s - 15.8
+    print(index)
+    inde = round(index)
+    print(inde)
+
+    if inde < 1:
+        print("Before Grade 1")
+    if 1 <= inde and inde < 16:
+        print("Grade " + str(inde))
+    if inde >= 16:
+        print("Grade 16+")
+
+
+def count_letters(text):
+    counter = 0
+    for c in text:
+        if c != " " and c != "!" and c != "." and c != "?" and c != "'" and c != "," and c != ":" and c != '"':
+            counter += 1
+    print(counter)
+    return counter
+
+
+def count_words(text):
+    counter = 0
+    for c in text:
+        if c == " ":
+            counter += 1
+    counter += 1
+    print(counter)
+    return counter
+
+
+def count_sentences(text):
+    counter = 0
+    for c in text:
+        if c == "." or c == "!" or c == "?":
+            counter += 1
+    print(counter)
+    return counter
+
+
+main()
